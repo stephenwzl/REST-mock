@@ -1,0 +1,29 @@
+{
+  "name": "rest-mock",
+  "version": "1.0.0",
+  "description": "a mock server for rest api",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/stephenwzl/REST-mock.git"
+  },
+  "keywords": [
+    "rest-api",
+    "mock"
+  ],
+  "author": "stephenw",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stephenwzl/REST-mock/issues"
+  },
+  "homepage": "https://github.com/stephenwzl/REST-mock#readme",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.1",
+    "express": "^4.13.4",
+    "multer": "^1.1.0"
+  }
+}
