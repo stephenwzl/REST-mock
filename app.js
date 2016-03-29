@@ -4,6 +4,13 @@
 var express = require('express');
 var app = express();
 var fileObjectReader = require('./readJSONFileObject');
+var pathHandler = require('./pathHandler');
+
+app.get('/*', function(req, res){
+    console.log(req.path);
+    pathHandler(req.path);
+    res.send('mock in develop');
+});
 
 app.get('/v1/carts/:sid/addresses', function(req, res){
     var addresses = fileObjectReader('addresses', function(data){
