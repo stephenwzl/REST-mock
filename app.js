@@ -5,24 +5,37 @@ var express = require('express');
 var app = express();
 var fileObjectReader = require('./readJSONFileObject');
 var pathHandler = require('./pathHandler');
+var http = require('http');
+var httpProxy = require('http-proxy');
+var proxy = httpProxy.createProxyServer({});
 
-app.get('/*', function(req, res){
-    console.log(req.path);
-    pathHandler(req.path);
-    res.send('mock in develop');
-});
-
-app.get('/v1/carts/:sid/addresses', function(req, res){
+app.get('/v1/carts/:sid/addresses', function(req, res, next){
     var addresses = fileObjectReader('addresses', function(data){
         if (data) {
             res.contentType("application/json");
             res.send(JSON.stringify(data));
         }
         else {
-            res.status(404);
-            res.send('error');
+            next();
         }
     });
+});
+
+app.use(function(req, res, next) {
+    console.log(req.originalUrl);
+    var sreq = http.request({
+        host:     'restapi.elenet.me', // 目标主机
+        path:     req.originalUrl,
+        method:   req.method, // 请求方式
+        headers:  req.headers
+    }, function(sres){
+        res.writeHead(sres.statusCode,sres.headers);
+        sres.pipe(res);
+        sres.on('end', function(){
+            console.log(req.originalUrl + 'done');
+        });
+    });
+    req.pipe(sreq);
 });
 
 var server = app.listen(3000, function(){
