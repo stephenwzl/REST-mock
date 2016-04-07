@@ -4,7 +4,7 @@
 var fs = require("fs");
 
 module.exports = function(fileName, callback) {
-    fs.readFile(__dirname + "/" + fileName + ".json", 'utf-8', function(err, data) {
+    fs.readFile(__dirname + "/jsonData/" + fileName + ".json", 'utf-8', function(err, data) {
         if (err) {
             console.log("read error");
             callback(null);

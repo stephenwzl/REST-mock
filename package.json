@@ -4,7 +4,7 @@
   "description": "a mock server for rest api",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "sudo node app.js"
   },
   "repository": {
     "type": "git",
@@ -23,8 +23,12 @@
   "dependencies": {
     "body-parser": "^1.15.0",
     "cookie-parser": "^1.4.1",
+    "ejs": "^2.4.1",
     "express": "^4.13.4",
+    "http-proxy": "^1.13.2",
+    "lodash": "^4.7.0",
     "multer": "^1.1.0",
+    "request": "^2.69.0",
     "url-pattern": "^1.0.1"
   }
 }

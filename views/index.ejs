@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <script src="js/jquery-2.2.3.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <style>
+        .card-panel {
+            height: 400px;
+        }
+        textarea {
+            height: 200px;
+            border: 2px solid white;
+            border-radius: 2px;
+            font-size: 1em;
+            line-height: normal !important;
+        }
+    </style>
+    <title>Title</title>
+</head>
+<body>
+<nav>
+    <div class="nav-wrapper blue darken-1">
+        <a href="#" class="brand-logo"> &nbsp;MOCK MOCK!</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="col m5">
+            <div class="card-panel blue-grey darken-1">
+                <form method="post" action="/addrouter">
+                    <input type="text" placeholder="路径名" name="pathName">
+                    <textarea placeholder="填入JSON数据" name="pathJSON"></textarea>
+                    <input type="submit" value="提交" class="btn btn-block">
+                </form>
+            </div>
+        </div>
+        <div class="col m7">
+
+            <div class="collection with-header" id="stage-list">
+                <li class="collection-header"><h4 class="black-text">已映射的路径</h4></li>
+                <% for(var i=0; i < routers.length; i++) {%>
+                <li class="collection-item light-blue-text"><%= routers[i]%><a class="secondary-content light-blue-text" href="#" onclick="deleteNode('<%= routers[i]%>')">delete</a></li>
+                <%}%>
+            </div>
+        </div>
+    </div>
+
+</nav>
+<script>
+    $(document).ready(function(){
+        Materialize.showStaggeredList('#stage-list');
+    });
+    function deleteNode(e){
+
+    }
+</script>
+</body>
+</html>
