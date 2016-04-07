@@ -9,22 +9,26 @@ var http = require('http');
 var httpProxy = require('http-proxy');
 var proxy = httpProxy.createProxyServer({});
 var url = require('url');
-
-//app.get('/v1/carts/:sid/addresses', function(req, res){
-//    var addresses = fileObjectReader('addresses', function(data){
-//        if (data) {
-//            res.contentType("application/json");
-//            res.send(JSON.stringify(data));
-//        }
-//        else {
-//            res.error("not found");
-//        }
-//    });
-//});
+var routerLoader = require('./routerLoader');
 
 app.all('*', function(req, res, next){
-    console.log(req.path);
-    next();
+    var routers = routerLoader();
+    var isRespond = false;
+    for (key in routers) {
+        if (pathHandler(req.path, key)) {
+            isRespond = true;
+            fileObjectReader(routers[key],function(err, data){
+                if (err) {
+                    res.send(err);
+                } else  {
+                    res.send(data);
+                }
+            });
+        }
+    }
+    if (!isRespond) {
+        next();
+    }
 });
 
 app.use(function(req, res, next) {
@@ -52,3 +56,18 @@ var server = app.listen(80, function(){
     var port = server.address().port;
     console.log("mock server is running on "+ host + ":"+port);
 });
+
+////another server for dashboard
+//var dashboard = express();
+//
+//dashboard.set('views',require('path').join(__dirname,'views'));
+//dashboard.set('view engine', 'html');
+//dashboard.use(express.static(__dirname+'/views'));
+//
+//dashboard.get('/',function(req, res){
+//    res.render('index');
+//});
+//
+//dashboard.listen(3000, function(){
+//    console.log("dashboard run on 127.0.0.1:3000");
+//});
