@@ -1,3 +1,1 @@
-{
-  "/v1/carts/:sid/addresses":"addresses"
-}
+{"/v1/333":"%v1%333","/v1/carts/:id/addresses":"%v1%carts%:id%addresses"}

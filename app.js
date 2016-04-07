@@ -10,6 +10,7 @@ var httpProxy = require('http-proxy');
 var proxy = httpProxy.createProxyServer({});
 var url = require('url');
 var routerLoader = require('./routerLoader');
+var bodyParser = require('body-parser');
 
 app.all('*', function(req, res, next){
     var routers = routerLoader();
@@ -57,17 +58,47 @@ var server = app.listen(80, function(){
     console.log("mock server is running on "+ host + ":"+port);
 });
 
-////another server for dashboard
-//var dashboard = express();
-//
-//dashboard.set('views',require('path').join(__dirname,'views'));
-//dashboard.set('view engine', 'html');
-//dashboard.use(express.static(__dirname+'/views'));
-//
-//dashboard.get('/',function(req, res){
-//    res.render('index');
-//});
-//
-//dashboard.listen(3000, function(){
-//    console.log("dashboard run on 127.0.0.1:3000");
-//});
+//another server for dashboard
+var dashboard = express();
+dashboard.use(bodyParser.json());
+dashboard.use(bodyParser.urlencoded({extended:false}));
+dashboard.set('views',require('path').join(__dirname,'views'));
+dashboard.use(express.static(__dirname+'/views'));
+dashboard.set('view engine', 'ejs');
+
+
+dashboard.get('/',function(req, res){
+    res.render('index',{routers: getRouters()});
+});
+
+dashboard.post('/addrouter',function(req, res){
+    var route = req.body.pathName;
+    var fileString = req.body.pathJSON;
+    if (route && fileString) {
+        var routers = routerLoader();
+        routers[route] = route.replace(/\//g,"%");
+        require('./writeJSON')(route.replace(/\//g,"%"),fileString,routers,function(err,success){
+            if (success) {
+                res.redirect('/');
+            }else  {
+                res.send(err);
+            }
+        });
+    }
+    else {
+        res.send('not allowed');
+    }
+});
+
+function getRouters() {
+    var routers = routerLoader();
+    var array = [];
+    for (key in routers) {
+        array.push(key);
+    }
+    return array;
+}
+
+dashboard.listen(3000, function(){
+    console.log("dashboard run on 127.0.0.1:3000");
+});
