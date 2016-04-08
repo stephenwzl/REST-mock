@@ -11,6 +11,7 @@ var proxy = httpProxy.createProxyServer({});
 var url = require('url');
 var routerLoader = require('./routerLoader');
 var bodyParser = require('body-parser');
+var settings = require('./config');
 
 app.all('*', function(req, res, next){
     var routers = routerLoader();
@@ -35,8 +36,8 @@ app.all('*', function(req, res, next){
 app.use(function(req, res, next) {
     var u = url.parse(req.url);
     var options = {
-        host: 'restapi.elenet.me',
-        port: u.port || 80,
+        host: settings.proxyHost,
+        port: u.port || settings.proxyPort ||80,
         path: u.path,
         method: req.method,
         headers: {
@@ -88,6 +89,25 @@ dashboard.post('/addrouter',function(req, res){
     else {
         res.send('not allowed');
     }
+});
+
+dashboard.post('/delete', function(req,res){
+    var keyname = req.body.keyname;
+    var router = routerLoader();
+    var fileName = router[keyname];
+    delete router[keyname];
+    require('./jsonDelete')(fileName);
+    require('./writeRouter')(router,function(err,success){
+        var resObj = {
+            success: false
+        };
+        if (err){
+        }else {
+            resObj.success = true;
+
+        }
+        res.send(resObj);
+    });
 });
 
 function getRouters() {

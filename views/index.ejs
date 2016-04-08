@@ -54,7 +54,17 @@
         Materialize.showStaggeredList('#stage-list');
     });
     function deleteNode(e){
-
+        $.ajax({
+            type:'POST',
+            url:'/delete',
+            data:{'keyname':e},
+            success: function(data){
+                if (data.success == true) {
+                    location.reload();
+                }
+            },
+            contentType:"application/x-www-form-urlencoded"
+        });
     }
 </script>
 </body>
