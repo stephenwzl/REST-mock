@@ -35,16 +35,14 @@ app.all('*', function(req, res, next){
 
 app.use(function(req, res, next) {
     var u = url.parse(req.url);
+    var headers = req.headers;
+    delete headers.host;
     var options = {
         host: settings.proxyHost,
         port: u.port || settings.proxyPort ||80,
         path: u.path,
         method: req.method,
-        headers: {
-            'cookie':req.header('cookie'),
-            'User-Agent': req.header('User-Agent') || '',
-            'X-DeviceInfo': req.header('X-DeviceInfo') || ''
-        }
+        headers: headers
     };
     var sreq = http.request(options, function(sres){
         res.writeHead(sres.statusCode,sres.headers);
